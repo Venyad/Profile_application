@@ -9,8 +9,10 @@ app.secret_key = 'your secret key'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_PASSWORD'] = 'jungkook'
 app.config['MYSQL_DB'] = 'profile'
+app.config['MYSQL_UNIX_SOCKET'] = '/tmp/mysql.sock'
+
 
 
 mysql = MySQL(app)
@@ -69,10 +71,11 @@ def register():
         elif not re.match(r'[A-Za-z0-9]+', username):
             msg = 'name must contain only characters and numbers' 
         else:
-            cursor.execute('INSERT INTO accounts VALUES \ (NULL, % s, % s, % s, % s, % s, % s, % s, % s, % s)',
-                           (username, password, email, 
-                            organisation, address, city,
-                            state, country, postalcode, ))
+            cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+               (username, password, email, 
+                organisation, address, city,
+                state, country, postalcode))
+
             mysql.connection.commit()
             msg = 'You have successfully registered!'
     elif request.method == 'POST':
@@ -122,13 +125,10 @@ def update():
             elif not re.match(r'[A-Za-z0-9]+', username):
                 msg = 'name must contain only characters and numbers !'
             else:
-                cursor.execute('UPDATE accounts SET username =% s,\
-                password =% s, email =% s, organisation =% s, \
-                address =% s, city =% s, state =% s, \
-                country =% s, postalcode =% s WHERE id =% s', (
-                    username, password, email, organisation, 
-                  address, city, state, country, postalcode, 
-                  (session['id'], ), ))
+                cursor.execute('UPDATE accounts SET username=%s, password=%s, email=%s, organisation=%s, \
+address=%s, city=%s, state=%s, country=%s, postalcode=%s WHERE id=%s',
+               (username, password, email, organisation, address, city, state, country, postalcode, session['id']))
+
                 mysql.connection.commit()
                 msg = 'You have successfully updated !'
         elif request.method == 'POST':
