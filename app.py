@@ -49,7 +49,7 @@ def logout():
 @app.route('/register', methods = ['GET','POST'])
 def register():
     msg = ''
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form and 'address' in request.form and 'city' in request.form and 'country' in request.form and 'postalcode' in request.form and 'organisation' in request.form:
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form and 'address' in request.form and 'city' in request.form and 'country' in request.form and 'postcode' in request.form and 'organisation' in request.form:
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
@@ -58,7 +58,7 @@ def register():
         city = request.form['city']
         state = request.form['state']
         country = request.form['country']
-        postalcode = request.form['postalcode']
+        postcode = request.form['postcode']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(
             'SELECT * FROM accounts WHERE username = % s' , (username,)
@@ -74,7 +74,7 @@ def register():
             cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
                (username, password, email, 
                 organisation, address, city,
-                state, country, postalcode))
+                state, country, postcode))
 
             mysql.connection.commit()
             msg = 'You have successfully registered!'
@@ -103,7 +103,7 @@ def display():
 def update():
     msg = ''
     if 'loggedin' in session:
-        if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form and 'address' in request.form and 'city' in request.form and 'country' in request.form and 'postalcode' in request.form and 'organisation' in request.form:
+        if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form and 'address' in request.form and 'city' in request.form and 'country' in request.form and 'postcode' in request.form and 'organisation' in request.form:
             username = request.form['username']
             password = request.form['password']
             email = request.form['email']
@@ -112,12 +112,11 @@ def update():
             city = request.form['city']
             state = request.form['state']
             country = request.form['country']
-            postalcode = request.form['postalcode']
+            postcode = request.form['postcode']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute(
-                'SELECT * FROM accounts WHERE username = % s',
-                      (username, ))
+            cursor.execute('SELECT * FROM accounts WHERE username = %s AND id != %s', (username, session['id']))
             account = cursor.fetchone()
+
             if account:
                 msg = 'Account already exists !'
             elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
@@ -126,8 +125,8 @@ def update():
                 msg = 'name must contain only characters and numbers !'
             else:
                 cursor.execute('UPDATE accounts SET username=%s, password=%s, email=%s, organisation=%s, \
-address=%s, city=%s, state=%s, country=%s, postalcode=%s WHERE id=%s',
-               (username, password, email, organisation, address, city, state, country, postalcode, session['id']))
+address=%s, city=%s, state=%s, country=%s, postcode=%s WHERE id=%s',
+               (username, password, email, organisation, address, city, state, country, postcode, session['id']))
 
                 mysql.connection.commit()
                 msg = 'You have successfully updated !'
