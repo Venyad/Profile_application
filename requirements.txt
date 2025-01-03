@@ -145,7 +145,6 @@ Pillow==10.1.0
 platformdirs==4.1.0
 plotly==5.24.1
 pluggy==1.3.0
-ply @ file:///private/tmp/python-ply-20231123-5320-9ahdwf/ply-3.11
 preshed==3.0.9
 prometheus_client==0.20.0
 prompt-toolkit==3.0.41
@@ -185,7 +184,6 @@ sentence-transformers==3.2.1
 sgmllib3k==1.0.0
 shap==0.46.0
 shellingham==1.5.4
-sip @ file:///private/tmp/sip-20231130-5085-y14vor/sip-6.8.0
 six==1.16.0
 slicer==0.0.8
 smart-open==7.0.4
